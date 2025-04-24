@@ -1,0 +1,20 @@
+git config --global user.name JoaoSerafim7
+git config --global user.email joaoserafim1107@gmail.com
+
+Criar um projeto React Native com Expo:
+npx create-expo-app@latest SerafimShoppingList --template blank
+
+cd SerafimShoppingList
+
+Extensão: Pesquisa React -> ES7+ React/Redux/React-Native snippets
+
+Atualiza os pacotes do node:
+npm i
+
+Executar o projeto: 
+npx expo start --localhost --android
+
+npx expo install react-dom react-native-web @expo/metro-runtime
+
+npx expo install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar
+
