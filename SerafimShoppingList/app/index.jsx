@@ -67,7 +67,7 @@ button: {
   alignSelf: 'center',
   borderRadius: 50,
   paddingVertical: 15,
-  width: '60',
+  width: '60%',
   textAlign: 'center',
 },
 buttonText: {
