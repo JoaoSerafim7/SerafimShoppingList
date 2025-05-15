@@ -1,14 +1,23 @@
 import { Stack } from 'expo-router'
-import { StatusBar  } from 'expo-status-bar'
+import { StatusBar } from 'expo-status-bar'
 
-export default function _layout() {
-  return (
-    <>
-        <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false}} />
-            <Stack.Screen name="home" options={{ headerShown: false}}/>
+export default function RootLayout() {
+    return (
+        <>
+        <Stack
+        screenOptions={{
+            headerStyle: {
+            },
+            headerTitleStyle: {
+                fontWeight: 'bold',
+                textAlign: 'center',
+            }      
+        }}>
+            <Stack.Screen name="index" options={{  }}/>
+            <Stack.Screen name="home"/>
         </Stack>
-        <StatusBar style='light' /> 
-    </>
-  )
+        <StatusBar style='light'/>
+        </>
+
+    )
 }
