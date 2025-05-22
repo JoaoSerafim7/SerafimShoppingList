@@ -1,10 +1,11 @@
-import React from 'react'
-import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TextInput, TouchableOpacity, Alert, FlatList } from 'react-native'
-import {Ionicons} from '@expo/vector-icons'
+import React, { useState } from 'react'
+import { Alert, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Ionicons } from '@expo/vector-icons';
+import ItemList from '../components/itemList';
 
 export default function Home() {
-  const [textInput, setTextinput] = useState('');
-  const [items, setItems] = useStates([]);
+  const [textInput, setTextInput] = useState('');
+  const [items, setItems] = useState([]);
 
   const addItem = () => {
     if (textInput == '') {
@@ -19,50 +20,45 @@ export default function Home() {
         bought: false
       }
       setItems([...items, newItem]);
-      setTextinput('');
+      setTextInput('');
     }
-  }
+  } 
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-
-
-
-      <ImageBackground         
-        source={require('../assets/background.jpeg')}
+      <ImageBackground
+        source={require('../assets/background.jpg')}
         style={{ flex: 1, justifyContent: 'flex-start' }}
-        resizeMode='repeat'>
-
+        resizeMode='repeat'
+      >
         <View style={styles.header}>
           <Text style={styles.title}>Lista de Produtos</Text>
-          <Ionicons name="trash" size={32} color='#fff'/>
+          <Ionicons name="trash" size={32} color="#fff" />
         </View>
 
         <FlatList
-          contentContainerStyle={{padding: 20, paddingBottom: 100, color: '#fff'}}
+          contentContainerStyle={{ padding: 20, paddingBottom: 100, color: '#fff' }}
           data={items}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ Item }) => 
-            <Text style={{ color: '#fff', fontSize: 20}}>
-              {item.name}
-            </Text>
-          }     
+          renderItem={({ item }) => 
+            <ItemList item={item}></ItemList>
+          }
         />
 
         <View style={styles.footer}>
-            <View style={styles.inputContainer}>
-              <TextInput 
-                color="#fff"
-                fontsize={18}
-                placeholderTextColor="#aeaeae"
-                placeholder='Digite o nome do produto...'
-                value={textInput}
-                onChangeText={(text) => setTextinput(text)}
-
-              />
-            </View>
-            <TouchableOpacity style={styles.iconContainer} onPress={addItem}>
-              <Ionicons name="name" size={36} color="#fff" />
-            </TouchableOpacity>
+          <View style={styles.inputContainer}>
+            <TextInput 
+              color="#fff"
+              fontSize={18}
+              placeholderTextColor="#aeaeae"
+              placeholder='Digite o nome do produto...'
+              value={textInput}
+              onChangeText={(text) => setTextInput(text)}
+            />
+          </View>
+          <TouchableOpacity style={styles.iconContainer} onPress={addItem}>
+            <Ionicons name="add" size={36} color="#fff" />
+          </TouchableOpacity>
         </View>
 
       </ImageBackground>
@@ -72,21 +68,19 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   header: {
-    paddingBottom: 20,
-    paddingRight: 30,
-    paddingLeft: 30,
-    paddingTop: 20,
+    padding: 25,
+    paddingTop: 50,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#000000',
+    backgroundColor: '#000000c0',
     borderBottomRightRadius: 30,
-    borderBottomLeftRadius: 30,
+    borderBottomLeftRadius: 30
   },
   title: {
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: 'bold',
-    color:'#fff'
+    color: '#fff'
   },
   footer: {
     backgroundColor: '#000000c0',
@@ -101,7 +95,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     height: 50,
     marginVertical: 20,
     borderRadius: 30,
@@ -114,7 +108,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     borderRadius: 25,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   }
-
 })
