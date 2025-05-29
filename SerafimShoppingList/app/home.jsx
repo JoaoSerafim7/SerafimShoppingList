@@ -1,11 +1,38 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
-import ItemList from '../components/itemList';
+import ItemList from '../components/ItemList';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function Home() {
   const [textInput, setTextInput] = useState('');
   const [items, setItems] = useState([]);
+  useEffect(() => {
+    getItemsFromDevice()
+  }, [])
+
+  useEffect(() => {
+    saveItemsToDevice();
+  }, [items])
+
+  const getItemsFromDevice = async () => {
+    try {
+      const itemsMemory = await AsyncStorage.getItem('SerafimShoppingList');
+      if (itemsMemory != null)
+        setItems(JSON.parse(itemsMemory))
+    } catch (error) {
+      console.log(`Erro: ${error}`)
+    }
+  }
+
+  const saveItemsToDevice = async () => {
+    try {
+      const itemsJson = JSON.stringify(items)
+      await AsyncStorage.setItem('SerafimShoppingList', itemsJson);
+    } catch (error) {
+      console.log(`Erro: ${error}`)
+    }
+  }
 
   const addItem = () => {
     if (textInput == '') {
@@ -24,6 +51,57 @@ export default function Home() {
     }
   } 
 
+  const markItemBought = itemId => {
+    const newItems = items.map((item) => {
+      if (item.id == itemId) {
+        return {...item, bought: true}
+      }
+      return item;
+    });
+    setItems(newItems);
+  }
+
+  const unmarkItemBought = itemId => {
+    const newItems = items.map((item) => {
+      if (item.id == itemId) {
+        return {...item, bought: false}
+      }
+      return item;
+    });
+    setItems(newItems);
+  }
+
+  const removeItem = itemId => {
+    Alert.alert(
+      'Excluir produto?', 'Confirmar a exclusão deste produto?',
+      [
+        {text: 'sim', onPress: () => {
+          const newItems = items.filter(item => item.id != itemId);
+          setItems(newItems);
+        }
+      },
+      {
+        text: 'cancelar', style: 'cancel'
+      }
+     ]
+    );
+  }
+
+  const removeAll = () => {
+    Alert.alert(
+      'Limpar?', 'Confirmar a exclusão de todos os produtos?',
+      [
+        {
+          text: 'Sim',
+          onPress: () => { setItems([])}
+        },
+        {
+          text: 'Cancelar', style: 'cancel'
+        }
+      ]
+    )
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
@@ -33,7 +111,7 @@ export default function Home() {
       >
         <View style={styles.header}>
           <Text style={styles.title}>Lista de Produtos</Text>
-          <Ionicons name="trash" size={32} color="#fff" />
+          <Ionicons name="trash" size={32} color="#fff" onPress={removeAll}/>
         </View>
 
         <FlatList
@@ -41,7 +119,11 @@ export default function Home() {
           data={items}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => 
-            <ItemList item={item}></ItemList>
+            <ItemList
+              item={item}
+              markItem={markItemBought}
+              unmarkItem={unmarkItemBought}
+              removeItem={removeItem} />
           }
         />
 
